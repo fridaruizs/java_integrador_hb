@@ -1,4 +1,4 @@
 package main.java.com.daos;
 
-public class UserDAO {
+public interface UserDAO {
 }

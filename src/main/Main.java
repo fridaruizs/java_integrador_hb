@@ -1,6 +1,7 @@
 package main;
 
 import main.java.com.utils.ConnectionUtil;
+import main.java.com.views.MainView;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +12,6 @@ public class Main {
     public static void main(String[] args) {
         // Perform any necessary initialization here
         System.out.printf("Hello and welcome!");
-        // For simplicity, let's assume MainView is your main UI class
-        // MainView mainView = new MainView();
-        // mainView.show(); // Assuming this method displays the main user interface
 
         // Testing DB
         try(Connection con = ConnectionUtil.getConnection()){

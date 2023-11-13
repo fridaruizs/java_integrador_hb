@@ -1,4 +1,7 @@
 package main.java.com.daos;
 
-public class TransactionDAO {
+import java.util.Date;
+
+public interface TransactionDAO {
+    void searchByDate(Date from, Date to);
 }

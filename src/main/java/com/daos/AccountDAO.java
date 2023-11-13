@@ -1,4 +1,4 @@
 package main.java.com.daos;
 
-public class AccountDAO {
+public interface AccountDAO {
 }
