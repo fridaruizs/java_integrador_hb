@@ -29,7 +29,7 @@ public class UserAdminDAO_h2 implements UserAdminDAO {
         }
     }
     @Override
-    public UserAdmin findById(int id) {
+    public UserAdmin searchById(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM sudo_users WHERE id = ?")) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -45,7 +45,7 @@ public class UserAdminDAO_h2 implements UserAdminDAO {
     }
 
     @Override
-    public List<UserAdmin> findAll() {
+    public List<UserAdmin> searchAll() {
         List<UserAdmin> userAdmins = new ArrayList<>();
 
         try (Statement statement = connection.createStatement();
@@ -62,7 +62,7 @@ public class UserAdminDAO_h2 implements UserAdminDAO {
     }
 
     @Override
-    public void save(UserAdmin userAdmin) {
+    public void create(UserAdmin userAdmin) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO sudo_users (username, password) VALUES (?, ?)")) {
             preparedStatement.setString(1, userAdmin.getUsername());
             preparedStatement.setString(2, userAdmin.getPassword());

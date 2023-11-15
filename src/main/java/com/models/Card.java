@@ -2,14 +2,20 @@ package main.java.com.models;
 
 public class Card {
     private int id;
-    private Account account;
+    private int accountId;
     private int available;
     private int due;
 
     // user no es atributo por que el caminito es: user > acc > card
-    public Card(int id, Account account, int available, int due) {
+    public Card(){};
+    public Card(int accountId){
+        this.accountId = accountId;
+        this.available = 0;
+        this.due = 0;
+    };
+    public Card(int id, int accountId, int available, int due) {
         this.id = id;
-        this.account = account;
+        this.accountId = accountId;
         this.available = available;
         this.due = due;
     }
@@ -18,8 +24,8 @@ public class Card {
         return id;
     }
 
-    public Account getAccount() {
-        return account;
+    public int getAccountId() {
+        return accountId;
     }
 
     public int getAvailable() {
@@ -34,8 +40,8 @@ public class Card {
         this.id = id;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 
     public void setAvailable(int available) {

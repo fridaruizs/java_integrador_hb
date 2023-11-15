@@ -1,11 +1,17 @@
 package main.java.com.controllers;
 
-import main.java.com.daos.UserAdminDAO;
+import main.java.com.daos.*;
+import main.java.com.models.Account;
+import main.java.com.models.Card;
+import main.java.com.models.Transaction;
 import main.java.com.models.User;
 
 public class UserAdminController {
-
-    private final UserAdminDAO userAdminDao;
+    private final UserAdminDAO userAdminDAO;
+    private final ReportDAO reportDAO;
+    private final AccountDAO accountDAO;
+    private final CardDAO cardDAO;
+    private final TransactionDAO transactionDAO;
 
     /*
       Como instanciar la implementacion:
@@ -17,8 +23,13 @@ public class UserAdminController {
       userController.updateUserUsername(sudoUser, "newUsername");
     */
 
-    public UserAdminController(UserAdminDAO userAdminDao) {
-        this.userAdminDao = userAdminDao;
+    public UserAdminController(UserAdminDAO userAdminDAO, ReportDAO reportDAO, AccountDAO accountDAO, CardDAO cardDAO, TransactionDAO transactionDAO)  {
+
+        this.userAdminDAO = userAdminDAO;
+        this.reportDAO = reportDAO;
+        this.accountDAO = accountDAO;
+        this.cardDAO = cardDAO;
+        this.transactionDAO = transactionDAO;
     }
 
     // Methods
@@ -29,28 +40,17 @@ public class UserAdminController {
         * report dao lo guarda en la db?
         */
     }
-    public void generateInterest(User user){
-        /*
-        * usuario.account.interest
-        * dao account update interest
-        * account .setinterest
-        */
+    public void generateInterest(Account account){
+        accountDAO.update(account);
     }
-    public void generateAccount(User user){
-        /*
-        * dao account create
-        * user.setaccounts agrego
-        */
+    public void generateAccount(User user, Account account){
+        account.setUserId(user.getId());
+        accountDAO.create(account);
     }
-    public void generateCard(User user){
-        /*
-        * dao card create
-        * account .getcards add
-        */
+    public void generateCard(int accountId){
+        cardDAO.create(new Card(accountId));
     }
-    public void generateTransaction(User user){
-        /*
-        * transactioncontroller.createtrasnaction?
-        */
+    public void generateTransaction(Transaction transaction){
+        transactionDAO.create(transaction);
     }
 }

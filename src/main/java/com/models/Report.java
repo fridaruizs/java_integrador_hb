@@ -12,18 +12,19 @@ public class Report {
     private Transaction[] transaction; // cada reporte es una lista de transacciones
     // note: reporte tiene lista de transacciones pero se tendrian
     // que generar a partir de las fechas
-    private User user; // de quien son los movimientos
+    private int userId; // de quien son los movimientos
     // note: RESUMEN es un tipo de reporte con el type = cuenta?
 
 
-    public Report(int id, ReportType type, Date from, Date to, String description, /*Transaction[] transaction,*/ User user) {
+    public Report(){};
+    public Report(int id, ReportType type, Date from, Date to, String description, /*Transaction[] transaction,*/ int userId) {
         this.id = id;
         this.type = type;
         this.from = from;
         this.to = to;
         this.description = description;
         // this.transaction = transaction;
-        this.user = user;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -33,12 +34,15 @@ public class Report {
     public ReportType getType() {
         return type;
     }
+    public String getTypeAsString() {
+        return type.toString();
+    }
 
-    public Date getFrom() {
+    public Date getFromDate() {
         return from;
     }
 
-    public Date getTo() {
+    public Date getToDate() {
         return to;
     }
 
@@ -50,23 +54,23 @@ public class Report {
         return transaction;
     }
 
-    public User getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setType(ReportType type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = fromString(type);
     }
 
-    public void setFrom(Date from) {
+    public void setFromDate(Date from) {
         this.from = from;
     }
 
-    public void setTo(Date to) {
+    public void setToDate(Date to) {
         this.to = to;
     }
 
@@ -78,7 +82,17 @@ public class Report {
         this.transaction = transaction;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    // Helper
+    public static ReportType fromString(String value) {
+        for (ReportType type : ReportType.values()) {
+            if (type.name().equalsIgnoreCase(value)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for string: " + value);
     }
 }

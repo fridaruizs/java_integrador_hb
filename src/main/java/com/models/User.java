@@ -7,6 +7,7 @@ public class User {
     private String username;
     private String password;
 
+    public User(){};
     public User(int id, String name, String username, String password, Account[] accounts) {
         this.id = id;
         this.name = name;
