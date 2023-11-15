@@ -8,7 +8,7 @@ import main.java.com.models.User;
 
 public class UserAdminController {
     private final UserAdminDAO userAdminDAO;
-    private final ReportDAO reportDAO;
+    // private final ReportDAO reportDAO;
     private final AccountDAO accountDAO;
     private final CardDAO cardDAO;
     private final TransactionDAO transactionDAO;
@@ -23,10 +23,10 @@ public class UserAdminController {
       userController.updateUserUsername(sudoUser, "newUsername");
     */
 
-    public UserAdminController(UserAdminDAO userAdminDAO, ReportDAO reportDAO, AccountDAO accountDAO, CardDAO cardDAO, TransactionDAO transactionDAO)  {
+    public UserAdminController(UserAdminDAO userAdminDAO, AccountDAO accountDAO, CardDAO cardDAO, TransactionDAO transactionDAO)  {
 
         this.userAdminDAO = userAdminDAO;
-        this.reportDAO = reportDAO;
+        // this.reportDAO = reportDAO;
         this.accountDAO = accountDAO;
         this.cardDAO = cardDAO;
         this.transactionDAO = transactionDAO;
