@@ -2,7 +2,10 @@ package main.java.com.views;
 
 import main.java.com.controllers.BaseController;
 import main.java.com.controllers.UserAdminController;
+import main.java.com.controllers.UserController;
 import main.java.com.exceptions.UserNotFoundException;
+import main.java.com.models.User;
+import main.java.com.models.UserAdmin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +28,7 @@ public class LoginView extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
 
-    public LoginView() {
+    public LoginView(UserAdminController userAdminController, UserController userController) {
         setTitle("FridaBank");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
@@ -62,11 +65,16 @@ public class LoginView extends JFrame {
                 String password = new String(passwordField.getPassword());
 
                 try {
-                    boolean canMoveOn = baseController.login(username, password);
-                    if(canMoveOn){
-                        // NextView nextView = new NextView();
-                        // nextView.setVisible(true);
-                        // this.dispose();
+                    Object existingUser = baseController.login(username, password);
+                    String type = baseController.checkUserType(username);
+                    if(existingUser != null && type.equals("userAdmin")){
+                        AdminView adminPanel = new AdminView((UserAdmin) existingUser, userAdminController, userController);
+                        adminPanel.setVisible(true);
+                        LoginView.this.dispose();
+                    } else if (existingUser != null && type.equals("user")) {
+                        UserView userPanel = new UserView((User)existingUser, userAdminController, userController);
+                        userPanel.setVisible(true);
+                        LoginView.this.dispose();
                     } else {
                         JOptionPane.showMessageDialog(LoginView.this, "Contraseña incorrecta");
                     }

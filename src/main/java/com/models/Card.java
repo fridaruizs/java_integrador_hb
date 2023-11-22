@@ -19,7 +19,10 @@ public class Card {
         this.available = available;
         this.due = due;
     }
-
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
     public int getId() {
         return id;
     }

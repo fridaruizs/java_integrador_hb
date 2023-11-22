@@ -8,7 +8,7 @@ import java.util.List;
 public interface CardDAO {
 
     List<Card> searchByUser(int userId); // getallbyuser
-    void create(Card card);
+    int create(Card card);
     void update(Card card);
     void remove(int id);
 

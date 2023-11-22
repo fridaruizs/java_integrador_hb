@@ -80,14 +80,21 @@ public class UserAdminDAO_h2 implements UserAdminDAO {
     }
 
     @Override
-    public void create(UserAdmin userAdmin) {
+    public int create(UserAdmin userAdmin) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO sudo_users (username, password) VALUES (?, ?)")) {
             preparedStatement.setString(1, userAdmin.getUsername());
             preparedStatement.setString(2, userAdmin.getPassword());
             preparedStatement.executeUpdate();
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                userAdmin.setId(generatedKeys.getInt(1));
+                return userAdmin.getId();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     @Override

@@ -17,8 +17,17 @@ public class BaseController {
         this.userAdminDAO = userAdminDAO;
     }
 
-
-    public boolean login(String username, String password) throws UserNotFoundException {
+    public String checkUserType(String username) throws UserNotFoundException {
+        UserAdmin ua = userAdminDAO.searchByName(username);
+        User u = userDAO.searchByName(username);
+        if(u != null){
+            return "user";
+        } else if (ua != null) {
+            return "userAdmin";
+        }
+        throw new UserNotFoundException("Usuario incorrecto o inexistente");
+    }
+    /*public boolean login(String username, String password) {
         UserAdmin ua = userAdminDAO.searchByName(username);
         User u = userDAO.searchByName(username);
         if(u != null){
@@ -26,6 +35,18 @@ public class BaseController {
         } else if (ua != null) {
             return Objects.equals(ua.getPassword(), password);
         }
-        throw new UserNotFoundException("Usuario incorrecto o inexistente");
+        return false;
+    }*/
+
+    public Object login(String username, String password) {
+        UserAdmin ua = userAdminDAO.searchByName(username);
+        User u = userDAO.searchByName(username);
+        if(u != null){
+            return u;
+        } else if (ua != null) {
+            return ua;
+        }
+        return null;
     }
+
 }

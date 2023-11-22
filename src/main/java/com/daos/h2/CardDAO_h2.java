@@ -48,7 +48,7 @@ public class CardDAO_h2 implements CardDAO {
     }
 
     @Override
-    public void create(Card card) {
+    public int create(Card card) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO cards (accountId, due, available) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, card.getAccountId());
             preparedStatement.setInt(2, card.getDue());
@@ -58,10 +58,12 @@ public class CardDAO_h2 implements CardDAO {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 card.setId(generatedKeys.getInt(1));
+                return card.getId();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     @Override

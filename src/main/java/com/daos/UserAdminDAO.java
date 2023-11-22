@@ -9,7 +9,7 @@ public interface UserAdminDAO {
     UserAdmin searchById(int id);
     UserAdmin searchByName(String username);
     List<UserAdmin> searchAll();
-    void create(UserAdmin userAdmin);
+    int create(UserAdmin userAdmin);
     void update(UserAdmin userAdmin);
     void delete(int id);
 }

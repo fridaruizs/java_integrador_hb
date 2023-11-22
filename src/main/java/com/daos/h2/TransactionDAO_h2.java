@@ -151,7 +151,7 @@ public class TransactionDAO_h2 implements TransactionDAO {
     }
 
     @Override
-    public void create(Transaction transaction) {
+    public int create(Transaction transaction) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO transactions (type, originId, destinyId, date, description) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, transaction.getTypeAsString());
             preparedStatement.setLong(2, transaction.getOriginId());
@@ -163,10 +163,12 @@ public class TransactionDAO_h2 implements TransactionDAO {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 transaction.setId(generatedKeys.getInt(1));
+                return transaction.getId();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     // Helper

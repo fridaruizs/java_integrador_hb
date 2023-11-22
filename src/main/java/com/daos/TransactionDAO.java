@@ -13,6 +13,6 @@ public interface TransactionDAO {
     List<Transaction> searchByTypeAndDate(TransactionType type, Date from, Date to);
     List<Transaction> searchByUser(User user); // get all
     Transaction searchById(int id);
-    void create(Transaction transaction);
+    int create(Transaction transaction);
     // No se pueden eliminar ni modificar las transacciones!
 }

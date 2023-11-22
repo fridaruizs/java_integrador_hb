@@ -79,7 +79,7 @@ public class UserDAO_h2 implements UserDAO {
     }
 
     @Override
-    public void create(User user) {
+    public int create(User user) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (name, username, password) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getUsername());
@@ -89,10 +89,12 @@ public class UserDAO_h2 implements UserDAO {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 user.setId(generatedKeys.getInt(1));
+                return user.getId();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     @Override

@@ -17,6 +17,12 @@ public class User {
         // this.cards = cards; for each account show card
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
+
+
     // Getters and setters
     public int getId() {
         return id;

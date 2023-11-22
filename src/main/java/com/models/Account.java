@@ -23,6 +23,11 @@ public class Account {
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(id);
+    }
+
     public int getId() {
         return id;
     }

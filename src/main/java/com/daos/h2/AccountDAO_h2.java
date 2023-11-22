@@ -50,6 +50,22 @@ public class AccountDAO_h2 implements AccountDAO {
 
         return accounts;
     }
+    @Override
+    public List<Account> searchAll() {
+        List<Account> accounts = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM accounts")) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                accounts.add(mapResultSetToAccount(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return accounts;
+    }
 
     @Override
     public Account searchById(int id) {
@@ -68,7 +84,7 @@ public class AccountDAO_h2 implements AccountDAO {
     }
 
     @Override
-    public void create(Account account) {
+    public int create(Account account) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO accounts (type, cbu, alias, interest, userId) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, account.getTypeAsString());
             preparedStatement.setInt(2, account.getCbu());
@@ -80,10 +96,12 @@ public class AccountDAO_h2 implements AccountDAO {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 account.setId(generatedKeys.getInt(1));
+                return account.getId();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1;
     }
 
     @Override

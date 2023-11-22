@@ -9,7 +9,7 @@ public interface UserDAO {
     User searchById(int id);
     User searchByName(String name);
     List<User> searchAll();
-    void create(User user);
+    int create(User user);
     void update(User user);
     void delete(int id);
 }

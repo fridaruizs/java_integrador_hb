@@ -4,8 +4,8 @@ import main.java.com.controllers.*;
 import main.java.com.daos.*;
 import main.java.com.daos.h2.*;
 import main.java.com.utils.ConnectionUtil;
+import main.java.com.views.AdminView;
 import main.java.com.views.LoginView;
-import main.java.com.views.MainView;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,7 +13,6 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
 
-        // DUMP SCRIPT: SCRIPT TO 'C:\Users\PC6\Downloads\dump.sql';
         // DB
         try{
             Connection con = ConnectionUtil.getConnection();
@@ -26,15 +25,16 @@ public class Main {
 
             // Controllers
             AccountController accountController = new AccountController(accountDAO);
-            UserAdminController userAdminController = new UserAdminController(userAdminDAO, accountDAO, cardDAO, transactionDAO);
+            UserAdminController userAdminController = new UserAdminController(userAdminDAO, userDAO, accountDAO, cardDAO, transactionDAO);
             UserController userController = new UserController(userDAO, cardDAO, accountDAO);
             TransactionController transactionController = new TransactionController(transactionDAO);
             BaseController baseController = new BaseController(userDAO, userAdminDAO);
 
             // View
-            LoginView mainView = new LoginView();
+            LoginView mainView = new LoginView(userAdminController, userController);
             mainView.setBaseController(baseController);
             mainView.setVisible(true);
+
 
 
         } catch (SQLException e) {
