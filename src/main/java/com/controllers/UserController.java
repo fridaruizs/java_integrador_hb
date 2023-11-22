@@ -17,10 +17,6 @@ public class UserController {
         this.accountDAO = accountDAO;
     }
 
-    // Methods
-    // public void getAllUserProducts(User user){
-        // getallcards getallaccounts
-    // }
     public List<Card> getAllUserCards(User user){
         return cardDAO.searchByUser(user.getId());
     }
@@ -31,10 +27,6 @@ public class UserController {
     public void editProfile(User user){
         userDAO.update(user);
     }
-
-    // public Transaction transfer(User user){
-        //save transaction > select account
-    // }
 
     // public Report getSummary(){
         //eggerar reportre?

@@ -1,10 +1,9 @@
 package main.java.com.controllers;
 
 import main.java.com.daos.*;
-import main.java.com.models.Account;
-import main.java.com.models.Card;
-import main.java.com.models.Transaction;
-import main.java.com.models.User;
+import main.java.com.models.*;
+
+import java.util.Objects;
 
 public class UserAdminController {
     private final UserAdminDAO userAdminDAO;
@@ -52,5 +51,14 @@ public class UserAdminController {
     }
     public void generateTransaction(Transaction transaction){
         transactionDAO.create(transaction);
+    }
+
+    public boolean login(UserAdmin userAdmin, String paswword){
+
+            if(Objects.equals(userAdmin.getPassword(), paswword)){
+                return true;
+            }
+
+        return false;
     }
 }

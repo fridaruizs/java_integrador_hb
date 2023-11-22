@@ -2,6 +2,7 @@ package main.java.com.daos.h2;
 
 import main.java.com.daos.UserDAO;
 import main.java.com.models.User;
+import main.java.com.models.UserAdmin;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,6 +32,23 @@ public class UserDAO_h2 implements UserDAO {
     public User searchById(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
             preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return mapResultSetToUser(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public User searchByName(String username) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE username = ?");
+            preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {

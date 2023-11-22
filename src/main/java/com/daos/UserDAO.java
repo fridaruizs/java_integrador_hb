@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserDAO {
     User searchById(int id);
+    User searchByName(String name);
     List<User> searchAll();
     void create(User user);
     void update(User user);

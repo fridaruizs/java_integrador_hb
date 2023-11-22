@@ -1,6 +1,7 @@
 package main.java.com.daos.h2;
 
 import main.java.com.daos.UserAdminDAO;
+import main.java.com.models.User;
 import main.java.com.models.UserAdmin;
 
 import java.sql.*;
@@ -23,7 +24,7 @@ public class UserAdminDAO_h2 implements UserAdminDAO {
                     "username VARCHAR(255) NOT NULL," +
                     "password VARCHAR(255) NOT NULL)");
             // add first and only value
-            statement.execute("INSERT INTO sudo_users (username, password) VALUES ('admin', 'admin')");
+            // statement.execute("INSERT INTO sudo_users (username, password) VALUES ('admin', 'admin')");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -32,6 +33,23 @@ public class UserAdminDAO_h2 implements UserAdminDAO {
     public UserAdmin searchById(int id) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM sudo_users WHERE id = ?")) {
             preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return mapResultSetToUserAdmin(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public UserAdmin searchByName(String username) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM sudo_users WHERE username = ?");
+            preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {

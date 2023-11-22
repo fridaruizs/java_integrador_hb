@@ -10,7 +10,14 @@ public class ConnectionUtil {
     private static final String USER = "sa";
     private static final String PASSWORD = "";
 
+    private static Connection connection;
+    private ConnectionUtil() {
+    }
+
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+        if (connection == null || connection.isClosed()) {
+            connection = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+        }
+        return connection;
     }
 }

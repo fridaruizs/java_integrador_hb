@@ -7,6 +7,7 @@ import java.util.List;
 public interface UserAdminDAO {
     // not sure is usefull crud here?
     UserAdmin searchById(int id);
+    UserAdmin searchByName(String username);
     List<UserAdmin> searchAll();
     void create(UserAdmin userAdmin);
     void update(UserAdmin userAdmin);
