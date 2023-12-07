@@ -52,15 +52,41 @@ public class UserAdminController {
     public List<Account> getAllAccounts(){
         return accountDAO.searchAll();
     }
+    public List<Account> getAllUserAccounts(User user){
+        return accountDAO.searchByUser(user);
+    }
     public void deleteAccount(Account acc){
         accountDAO.delete(acc.getId());
         // update user's account list
+    }
+
+    public Card getAccountCard(Account account){
+        return cardDAO.searchByUserAccount(account.getId());
     }
     public int generateCard(Card card){
         return cardDAO.create(card);
     }
     public void deleteCard(Card card){ cardDAO.remove(card.getId());}
     public int generateTransaction(Transaction transaction){
+        // updates saldos
+        Card originAcc = cardDAO.searchByUserAccount(transaction.getOriginId());
+        Card destinyAcc = cardDAO.searchByUserAccount(transaction.getDestinyId());
+
+        if(transaction.getType() == TransactionType.debit){
+            originAcc.setAvailable(originAcc.getAvailable() - transaction.getAmount());
+            originAcc.setDue(originAcc.getDue() + transaction.getAmount());
+
+            destinyAcc.setAvailable(destinyAcc.getAvailable() + transaction.getAmount());
+            destinyAcc.setDue(destinyAcc.getDue() - transaction.getAmount());
+        } else {
+            originAcc.setAvailable(originAcc.getAvailable() + transaction.getAmount());
+            originAcc.setDue(originAcc.getDue() - transaction.getAmount());
+
+            destinyAcc.setAvailable(destinyAcc.getAvailable() - transaction.getAmount());
+            destinyAcc.setDue(destinyAcc.getDue() + transaction.getAmount());
+        }
+        cardDAO.update(originAcc);
+        cardDAO.update(destinyAcc);
         return transactionDAO.create(transaction);
     }
 

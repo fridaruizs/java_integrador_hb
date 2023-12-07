@@ -68,13 +68,13 @@ public class LoginView extends JFrame {
                     Object existingUser = baseController.login(username, password);
                     String type = baseController.checkUserType(username);
                     if(existingUser != null && type.equals("userAdmin")){
-                        AdminView adminPanel = new AdminView((UserAdmin) existingUser, userAdminController, userController);
+                        AdminView adminPanel = new AdminView((UserAdmin) existingUser, userAdminController, userController, LoginView.this);
                         adminPanel.setVisible(true);
-                        LoginView.this.dispose();
+                        LoginView.this.setVisible(false);
                     } else if (existingUser != null && type.equals("user")) {
-                        UserView userPanel = new UserView((User)existingUser, userAdminController, userController);
+                        UserView userPanel = new UserView((User)existingUser, userAdminController, userController, LoginView.this);
                         userPanel.setVisible(true);
-                        LoginView.this.dispose();
+                        LoginView.this.setVisible(false);
                     } else {
                         JOptionPane.showMessageDialog(LoginView.this, "Contraseña incorrecta");
                     }

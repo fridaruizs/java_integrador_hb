@@ -12,6 +12,7 @@ public class Account {
     // es un camino simple de usuario tiene cuenta, cuenta tiene tarjeta
     // lo mismo pasa con transacciones/movimeintos
     // cuenta no tiene movimientos porque movimientos tiene cuenta
+    // cuenta no tiene saldo porque es de la tarjeta
 
     public  Account(){};
     public Account(int id, AccountType type, int cbu, String alias, double interest, int userId) {

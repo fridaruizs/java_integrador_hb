@@ -5,6 +5,7 @@ import java.util.Date;
 public class Transaction {
     private int id;
     private TransactionType type;
+    private int amount;
     private int originId;
     private int destinyId;
     private Date date;
@@ -13,6 +14,7 @@ public class Transaction {
     public Transaction(){};
     public Transaction(
             int id,
+            int amount,
             TransactionType type,
             int originId,
             int destinyId,
@@ -20,6 +22,7 @@ public class Transaction {
             String description)
     {
         this.id = id;
+        this.amount = amount;
         this.type = type;
         this.originId = originId;
         this.destinyId = destinyId;
@@ -29,6 +32,9 @@ public class Transaction {
 
     public int getId() {
         return id;
+    }
+    public int getAmount() {
+        return amount;
     }
 
     public TransactionType getType() {
@@ -56,6 +62,9 @@ public class Transaction {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public void setType(TransactionType type) {

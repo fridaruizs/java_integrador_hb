@@ -48,6 +48,23 @@ public class CardDAO_h2 implements CardDAO {
     }
 
     @Override
+    public Card searchByUserAccount(int accountId) {
+        List<Card> cards = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM cards WHERE accountId = ?")) {
+            preparedStatement.setInt(1, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return mapResultSetToCard(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public int create(Card card) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO cards (accountId, due, available) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, card.getAccountId());

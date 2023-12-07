@@ -11,8 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminView extends JFrame {
 
@@ -22,7 +24,7 @@ public class AdminView extends JFrame {
     private JComboBox<User> userDropdown;
     private JPanel mainPanel;
 
-    public AdminView(UserAdmin user, UserAdminController userAdminController, UserController userController) {
+    public AdminView(UserAdmin user, UserAdminController userAdminController, UserController userController,LoginView loginView) {
         this.userAdminController = userAdminController;
         this.userController = userController;
         this.user = user;
@@ -40,15 +42,134 @@ public class AdminView extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setContentPane(scrollPane);
 
-        createCreateUserBox();
-        createCreateAccountBox();
-        createCreateInterestBox();
-        createCreateCardBox();
-        createCreateTransactionBox();
+        JButton backButton = new JButton("Go back to login");
+        backButton.addActionListener(e -> {
+           dispose();
+            loginView.setVisible(true);
+            // this.mainPanel.setVisible(false);
+        });
 
-        createDeleteUserBox();
-        createDeleteAccountBox();
-        createDeleteCardBox();
+        mainPanel.add(backButton);
+
+        // USER CREATION
+        JPanel createUserPanel = new JPanel();
+        createUserPanel.setBorder(BorderFactory.createTitledBorder("Create User"));
+
+        createCreateUserBox(createUserPanel);
+
+        JButton toggleCreateUserButton = new JButton("Create User");
+        toggleCreateUserButton.addActionListener(e -> {
+            createUserPanel.setVisible(!createUserPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleCreateUserButton);
+        mainPanel.add(createUserPanel);
+
+        // ACCOUNT CREATION
+        JPanel createAccountPanel = new JPanel();
+        createAccountPanel.setBorder(BorderFactory.createTitledBorder("Create Account"));
+
+        createCreateAccountBox(createAccountPanel);
+
+        JButton toggleCreateAccountButton = new JButton("Create Account");
+        toggleCreateAccountButton.addActionListener(e -> {
+            createAccountPanel.setVisible(!createAccountPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleCreateAccountButton);
+        mainPanel.add(createAccountPanel);
+
+        // INTEREST CREATION
+        JPanel createInterestPanel = new JPanel();
+        createInterestPanel.setBorder(BorderFactory.createTitledBorder("Create Interest"));
+
+        createCreateInterestBox(createInterestPanel);
+
+        JButton toggleCreateInterestButton = new JButton("Create Interest");
+        toggleCreateInterestButton.addActionListener(e -> {
+            createInterestPanel.setVisible(!createInterestPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleCreateInterestButton);
+        mainPanel.add(createInterestPanel);
+
+        // CARD CREATION
+        JPanel createCardPanel = new JPanel();
+        createCardPanel.setBorder(BorderFactory.createTitledBorder("Create Card"));
+
+        createCreateCardBox(createCardPanel);
+
+        JButton toggleCreateCardButton = new JButton("Create Card");
+        toggleCreateCardButton.addActionListener(e -> {
+            createCardPanel.setVisible(!createCardPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleCreateCardButton);
+        mainPanel.add(createCardPanel);
+
+        // Transaction CREATION
+        JPanel createTransactionPanel = new JPanel();
+        createTransactionPanel.setBorder(BorderFactory.createTitledBorder("Create Transaction"));
+
+        createCreateTransactionBox(createTransactionPanel);
+
+        JButton toggleCreateTransactionButton = new JButton("Create Transaction");
+        toggleCreateTransactionButton.addActionListener(e -> {
+            createTransactionPanel.setVisible(!createTransactionPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleCreateTransactionButton);
+        mainPanel.add(createTransactionPanel);
+
+        // USER DELETE
+        JPanel createDeleteUserPanel = new JPanel();
+        createDeleteUserPanel.setBorder(BorderFactory.createTitledBorder("Delete User"));
+
+        createDeleteUserBox(createDeleteUserPanel);
+
+        JButton toggleDeleteUserButton = new JButton("Delete User");
+        toggleDeleteUserButton.addActionListener(e -> {
+            createDeleteUserPanel.setVisible(!createDeleteUserPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleDeleteUserButton);
+        mainPanel.add(createDeleteUserPanel);
+
+        // ACCOUNT DELETE
+        JPanel createDeleteAccountPanel = new JPanel();
+        createDeleteAccountPanel.setBorder(BorderFactory.createTitledBorder("Delete Account"));
+
+        createDeleteAccountBox(createDeleteAccountPanel);
+
+        JButton toggleDeleteAccountButton = new JButton("Delete Account");
+        toggleDeleteAccountButton.addActionListener(e -> {
+            createDeleteAccountPanel.setVisible(!createDeleteAccountPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleDeleteAccountButton);
+        mainPanel.add(createDeleteAccountPanel);
+
+        // CARD DELETE
+        JPanel createDeleteCardPanel = new JPanel();
+        createDeleteCardPanel.setBorder(BorderFactory.createTitledBorder("Delete Card"));
+
+        createDeleteCardBox(createDeleteUserPanel);
+
+        JButton toggleDeleteCardButton = new JButton("Delete Card");
+        toggleDeleteCardButton.addActionListener(e -> {
+            createDeleteCardPanel.setVisible(!createDeleteCardPanel.isVisible());
+            mainPanel.revalidate();
+        });
+
+        mainPanel.add(toggleDeleteCardButton);
+        mainPanel.add(createDeleteCardPanel);
 
         createRefreshButton();
 
@@ -74,8 +195,10 @@ public class AdminView extends JFrame {
         mainPanel.repaint();
         mainPanel.revalidate();
     }
-    private void createCreateUserBox() {
-        JPanel createUserBox = new JPanel();
+    private void createCreateUserBox(JPanel createUserBox) {
+
+        createUserBox.setVisible(false);
+
         createUserBox.setBorder(BorderFactory.createTitledBorder("Create User"));
 
         createUserBox.setLayout(new GridLayout(0, 2));
@@ -136,8 +259,9 @@ public class AdminView extends JFrame {
 
         mainPanel.add(createUserBox);
     }
-    private void createCreateAccountBox() {
-        JPanel createAccountBox = new JPanel();
+    private void createCreateAccountBox(JPanel createAccountBox) {
+        createAccountBox.setVisible(false);
+
         createAccountBox.setBorder(BorderFactory.createTitledBorder("Create Account"));
 
         createAccountBox.setLayout(new GridLayout(0, 2));
@@ -147,8 +271,19 @@ public class AdminView extends JFrame {
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
+        // List<Account> existingAcc = userAdminController.getAllUserAccounts((User) userDropdown.getSelectedItem());
+        // List<AccountType> existingAccountTypes = existingAcc.stream()
+                // .map(Account::getType)
+                // .collect(Collectors.toList());
+        // List<AccountType> allPossibleAccountTypes = Arrays.asList(AccountType.values());
+
+        // List<AccountType> availableAccountTypes = allPossibleAccountTypes.stream()
+               // .filter(accountType -> !existingAccountTypes.contains(accountType))
+               // .collect(Collectors.toList());
+
         JLabel typeLabel = new JLabel("Account Type:");
         JComboBox<AccountType> typeDropdown = new JComboBox<>(AccountType.values());
+        // JComboBox<AccountType> typeDropdown = new JComboBox<>(availableAccountTypes.toArray(new AccountType[0]));
 
         JLabel cbuLabel = new JLabel("CBU:");
         JLabel aliasLabel = new JLabel("Alias:");
@@ -175,6 +310,19 @@ public class AdminView extends JFrame {
                 newAcc.setInterest(interest);
                 newAcc.setAlias(alias);
                 newAcc.setType(selectedType);
+
+
+                // VALIDATION
+                // if account.type ya existe no deberia ni ser una op TODO dropdown
+                List<Account> existingAcc = userAdminController.getAllUserAccounts((User) userDropdown.getSelectedItem());
+                List<AccountType> existingAccountTypes = existingAcc.stream()
+                .map(Account::getType)
+                .collect(Collectors.toList());
+
+                if(existingAccountTypes.contains(selectedType)){
+                    JOptionPane.showMessageDialog(AdminView.this, "Una cuenta de ese tipo ya fue creada, seleccione un nuevo tipo (Solo se permite una cuenta por tipo!)");
+                    return;
+                }
 
                 try {
                     int id = userAdminController.generateAccount(selectedUser, newAcc);
@@ -204,8 +352,9 @@ public class AdminView extends JFrame {
 
         mainPanel.add(createAccountBox);
     }
-    public void createCreateInterestBox(){
-        JPanel createInterestBox = new JPanel();
+    public void createCreateInterestBox(JPanel createInterestBox){
+        createInterestBox.setVisible(false);
+
         createInterestBox.setBorder(BorderFactory.createTitledBorder("Generate interest"));
 
         createInterestBox.setLayout(new GridLayout(0, 2));
@@ -257,8 +406,9 @@ public class AdminView extends JFrame {
 
 
     }
-    public void createCreateCardBox(){
-        JPanel createCardBox = new JPanel();
+    public void createCreateCardBox(JPanel createCardBox){
+        createCardBox.setVisible(false);
+
         createCardBox.setBorder(BorderFactory.createTitledBorder("Create Card"));
 
         createCardBox.setLayout(new GridLayout(0, 2));
@@ -329,8 +479,9 @@ public class AdminView extends JFrame {
 
         mainPanel.add(createCardBox);
     }
-    public void createDeleteUserBox(){
-        JPanel createDeleteUserBox = new JPanel();
+    public void createDeleteUserBox(JPanel createDeleteUserBox){
+        createDeleteUserBox.setVisible(false);
+
         createDeleteUserBox.setBorder(BorderFactory.createTitledBorder("Delete User"));
 
         createDeleteUserBox.setLayout(new GridLayout(0, 2));
@@ -367,8 +518,9 @@ public class AdminView extends JFrame {
         mainPanel.add(createDeleteUserBox);
 
     }
-    public void createDeleteAccountBox(){
-        JPanel createDeleteAccountBox = new JPanel();
+    public void createDeleteAccountBox(JPanel createDeleteAccountBox){
+        createDeleteAccountBox.setVisible(false);
+
         createDeleteAccountBox.setBorder(BorderFactory.createTitledBorder("Delete Account"));
 
         createDeleteAccountBox.setLayout(new GridLayout(0, 2));
@@ -417,8 +569,9 @@ public class AdminView extends JFrame {
 
         mainPanel.add(createDeleteAccountBox);
     }
-    public void createDeleteCardBox(){
-        JPanel createDeleteCardBox = new JPanel();
+    public void createDeleteCardBox(JPanel createDeleteCardBox){
+        createDeleteCardBox.setVisible(false);
+
         createDeleteCardBox.setBorder(BorderFactory.createTitledBorder("Delete Card"));
 
         createDeleteCardBox.setLayout(new GridLayout(0, 2));
@@ -467,8 +620,9 @@ public class AdminView extends JFrame {
 
         mainPanel.add(createDeleteCardBox);
     }
-    public void createCreateTransactionBox(){
-        JPanel createTransactionBox = new JPanel();
+    public void createCreateTransactionBox(JPanel createTransactionBox){
+        createTransactionBox.setVisible(false);
+
         createTransactionBox.setBorder(BorderFactory.createTitledBorder("Create Transaction"));
 
         createTransactionBox.setLayout(new GridLayout(0, 2));
@@ -481,7 +635,7 @@ public class AdminView extends JFrame {
         JLabel destinyLabel = new JLabel("Select destiny id:");
 
         List<Account> destinyList = userAdminController.getAllAccounts();
-        JComboBox<Account> destinyDropdown = new JComboBox<>(originList.toArray(new Account[0]));
+        JComboBox<Account> destinyDropdown = new JComboBox<>(destinyList.toArray(new Account[0]));
 
         JLabel typeLabel = new JLabel("Transaction Type:");
         JComboBox<TransactionType> typeDropdown = new JComboBox<>(TransactionType.values());
@@ -490,24 +644,46 @@ public class AdminView extends JFrame {
 
         JTextField descField = new JTextField(15);
 
+        JLabel amountLabel = new JLabel("Amount:");
+
+        JTextField amountField = new JTextField(15);
+
         JButton createTransactionButton = new JButton("Create Transaction");
 
         createTransactionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String desc = descField.getText();
                 TransactionType selectedType = (TransactionType) typeDropdown.getSelectedItem();
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 Date currentDate = Date.from(currentDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
+                int amount = Integer.parseInt(amountField.getText());
+
                 Transaction tr = new Transaction();
                 tr.setDescription(desc);
                 tr.setDate(currentDate);
+                tr.setAmount(amount);
+                tr.setType(selectedType);
+
                 if(originDropdown.getSelectedItem().equals(destinyDropdown.getSelectedItem())){
                     JOptionPane.showMessageDialog(AdminView.this, "Las cuentas no pueden ser iguales!");
                 } else {
                     Account origin = (Account)originDropdown.getSelectedItem();
                     Account destiny = (Account)destinyDropdown.getSelectedItem();
+
+                    // VALIDATION
+                    Card oCard = userAdminController.getAccountCard(origin);
+                    Card dCard = userAdminController.getAccountCard(destiny);
+
+                    if(oCard == null || dCard == null){
+                        JOptionPane.showMessageDialog(AdminView.this, "You need to create a card for the selected account before making a transaction.");
+                        return;
+                    }
+
+                    tr.setDestinyId(destiny.getId());
+                    tr.setOriginId(origin.getId());
 
                     try {
                         int id = userAdminController.generateTransaction(tr);
@@ -533,8 +709,11 @@ public class AdminView extends JFrame {
         createTransactionBox.add(typeDropdown);
         createTransactionBox.add(descLabel);
         createTransactionBox.add(descField);
+        createTransactionBox.add(amountLabel);
+        createTransactionBox.add(amountField);
         createTransactionBox.add(createTransactionButton);
 
         mainPanel.add(createTransactionBox);
     }
+    public void createCreateRecordBox(JPanel panel){}
 }

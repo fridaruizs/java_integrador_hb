@@ -10,7 +10,9 @@ public interface TransactionDAO {
     List<Transaction> searchByDateAndAccount(Date from, Date to, int accountId);
     List<Transaction> searchByDateAndUser(Date from, Date to, int userId);
     // List<Transaction> searchByDateAndCard(Date from, Date to, int cardId);
-    List<Transaction> searchByTypeAndDate(TransactionType type, Date from, Date to);
+    // List<Transaction> searchByTypeAndDate(TransactionType type, Date from, Date to);
+    List<Transaction> searchByType(TransactionType type);
+    List<Transaction> searchByTypeAndUser(TransactionType type, int userId);
     List<Transaction> searchByUser(User user); // get all
     Transaction searchById(int id);
     int create(Transaction transaction);
