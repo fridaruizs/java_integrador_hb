@@ -8,7 +8,6 @@ import java.util.List;
 public interface AccountDAO {
     List<Account> searchByUser(User user); //getall
     List<Account> searchAll();
-    Account searchById(int id);
     int create(Account account);
     void update(Account account);
     void delete(int accountId);

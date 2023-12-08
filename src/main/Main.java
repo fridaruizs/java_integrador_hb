@@ -24,18 +24,15 @@ public class Main {
             CardDAO cardDAO = new CardDAO_h2(con);
 
             // Controllers
-            AccountController accountController = new AccountController(accountDAO);
-            UserAdminController userAdminController = new UserAdminController(userAdminDAO, userDAO, accountDAO, cardDAO, transactionDAO);
+            UserAdminController userAdminController = new UserAdminController(userDAO, accountDAO, cardDAO);
             UserController userController = new UserController(userDAO, cardDAO, accountDAO, transactionDAO);
-            TransactionController transactionController = new TransactionController(transactionDAO);
+            TransactionController transactionController = new TransactionController(transactionDAO, cardDAO);
             BaseController baseController = new BaseController(userDAO, userAdminDAO);
 
             // View
-            LoginView mainView = new LoginView(userAdminController, userController);
+            LoginView mainView = new LoginView(userAdminController, userController, transactionController);
             mainView.setBaseController(baseController);
             mainView.setVisible(true);
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();

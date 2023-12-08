@@ -1,5 +1,6 @@
 package main.java.com.views;
 
+import main.java.com.controllers.TransactionController;
 import main.java.com.controllers.UserAdminController;
 import main.java.com.controllers.UserController;
 import main.java.com.exceptions.FailedObjectCreationException;
@@ -20,6 +21,7 @@ public class UserView extends JFrame {
 
     private UserAdminController userAdminController;
     private UserController userController;
+    private TransactionController trController;
     private User user;
     private JComboBox<User> userDropdown;
     private JPanel mainPanel;
@@ -27,7 +29,7 @@ public class UserView extends JFrame {
     private JTable debitTable;
     private JTable creditTable;
 
-    public UserView(User user, UserAdminController userAdminController, UserController userController, LoginView loginView) {
+    public UserView(User user, UserAdminController userAdminController, UserController userController, TransactionController trController, LoginView loginView) {
         this.userAdminController = userAdminController;
         this.userController = userController;
         this.user = user;
@@ -216,7 +218,7 @@ public class UserView extends JFrame {
                     tr.setOriginId(origin.getId());
 
                     try {
-                        int id = userController.generateTransaction(tr);
+                        int id = trController.generateTransaction(tr);
                         if (id > 0){
                             JOptionPane.showMessageDialog(UserView.this, "Transaccion creada con ID:" + id);
                             // refreshAll();

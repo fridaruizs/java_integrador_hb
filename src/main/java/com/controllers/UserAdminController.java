@@ -6,22 +6,17 @@ import main.java.com.models.*;
 import java.util.List;
 
 public class UserAdminController {
-    private final UserAdminDAO userAdminDAO;
     private final UserDAO userDAO;
     // private final ReportDAO reportDAO;
     private final AccountDAO accountDAO;
     private final CardDAO cardDAO;
-    private final TransactionDAO transactionDAO;
 
+    public UserAdminController(UserDAO userDAO, AccountDAO accountDAO, CardDAO cardDAO)  {
 
-    public UserAdminController(UserAdminDAO userAdminDAO, UserDAO userDAO, AccountDAO accountDAO, CardDAO cardDAO, TransactionDAO transactionDAO)  {
-
-        this.userAdminDAO = userAdminDAO;
         this.userDAO = userDAO;
         // this.reportDAO = reportDAO;
         this.accountDAO = accountDAO;
         this.cardDAO = cardDAO;
-        this.transactionDAO = transactionDAO;
     }
 
     // Methods
@@ -67,28 +62,4 @@ public class UserAdminController {
         return cardDAO.create(card);
     }
     public void deleteCard(Card card){ cardDAO.remove(card.getId());}
-    public int generateTransaction(Transaction transaction){
-        // updates saldos
-        Card originAcc = cardDAO.searchByUserAccount(transaction.getOriginId());
-        Card destinyAcc = cardDAO.searchByUserAccount(transaction.getDestinyId());
-
-        if(transaction.getType() == TransactionType.debit){
-            originAcc.setAvailable(originAcc.getAvailable() - transaction.getAmount());
-            originAcc.setDue(originAcc.getDue() + transaction.getAmount());
-
-            destinyAcc.setAvailable(destinyAcc.getAvailable() + transaction.getAmount());
-            destinyAcc.setDue(destinyAcc.getDue() - transaction.getAmount());
-        } else {
-            originAcc.setAvailable(originAcc.getAvailable() + transaction.getAmount());
-            originAcc.setDue(originAcc.getDue() - transaction.getAmount());
-
-            destinyAcc.setAvailable(destinyAcc.getAvailable() - transaction.getAmount());
-            destinyAcc.setDue(destinyAcc.getDue() + transaction.getAmount());
-        }
-        cardDAO.update(originAcc);
-        cardDAO.update(destinyAcc);
-        return transactionDAO.create(transaction);
-    }
-
-    // public void deleteTransaction(Transaction tr){ transactionDAO.}
 }

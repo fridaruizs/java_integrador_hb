@@ -1,6 +1,7 @@
 package main.java.com.views;
 
 import main.java.com.controllers.BaseController;
+import main.java.com.controllers.TransactionController;
 import main.java.com.controllers.UserAdminController;
 import main.java.com.controllers.UserController;
 import main.java.com.exceptions.UserNotFoundException;
@@ -11,10 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class LoginView extends JFrame {
 
@@ -28,27 +25,23 @@ public class LoginView extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
 
-    public LoginView(UserAdminController userAdminController, UserController userController) {
+    public LoginView(UserAdminController userAdminController, UserController userController, TransactionController trController) {
         setTitle("FridaBank");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
         setLocationRelativeTo(null);
 
-        // JLabel welcomeLabel = new JLabel("Welcome to FridaBank. Please login.");
-        // welcomeLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        JLabel usernameLabel = new JLabel("Username:");
-        JLabel passwordLabel = new JLabel("Password:");
+        JLabel usernameLabel = new JLabel("Usuario:");
+        JLabel passwordLabel = new JLabel("Contraseña:");
 
         usernameField = new JTextField(15);
         passwordField = new JPasswordField(15);
-        loginButton = new JButton("Login");
+        loginButton = new JButton("Ingresar");
 
         JPanel mainPanel = new JPanel();
 
         mainPanel.setLayout(new GridLayout(3, 2));
 
-        // mainPanel.add(welcomeLabel);
         mainPanel.add(usernameLabel);
         mainPanel.add(usernameField);
         mainPanel.add(passwordLabel);
@@ -68,11 +61,11 @@ public class LoginView extends JFrame {
                     Object existingUser = baseController.login(username, password);
                     String type = baseController.checkUserType(username);
                     if(existingUser != null && type.equals("userAdmin")){
-                        AdminView adminPanel = new AdminView((UserAdmin) existingUser, userAdminController, userController, LoginView.this);
+                        AdminView adminPanel = new AdminView((UserAdmin) existingUser, userAdminController, userController, trController, LoginView.this);
                         adminPanel.setVisible(true);
                         LoginView.this.setVisible(false);
                     } else if (existingUser != null && type.equals("user")) {
-                        UserView userPanel = new UserView((User)existingUser, userAdminController, userController, LoginView.this);
+                        UserView userPanel = new UserView((User)existingUser, userAdminController, userController, trController, LoginView.this);
                         userPanel.setVisible(true);
                         LoginView.this.setVisible(false);
                     } else {
@@ -85,13 +78,4 @@ public class LoginView extends JFrame {
             }
         });
     }
-
-    /* public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new LoginView().setVisible(true);
-            }
-        });
-    }*/
 }

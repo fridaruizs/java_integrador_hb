@@ -1,5 +1,6 @@
 package main.java.com.views;
 
+import main.java.com.controllers.TransactionController;
 import main.java.com.controllers.UserAdminController;
 import main.java.com.controllers.UserController;
 import main.java.com.exceptions.FailedObjectCreationException;
@@ -11,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,19 +20,20 @@ public class AdminView extends JFrame {
 
     private UserAdminController userAdminController;
     private UserController userController;
+    private TransactionController transactionController;
     private UserAdmin user;
     private JComboBox<User> userDropdown;
     private JPanel mainPanel;
 
-    public AdminView(UserAdmin user, UserAdminController userAdminController, UserController userController,LoginView loginView) {
+    public AdminView(UserAdmin user, UserAdminController userAdminController, UserController userController, TransactionController transactionController,LoginView loginView) {
         this.userAdminController = userAdminController;
         this.userController = userController;
+        this.transactionController = transactionController;
         this.user = user;
 
         setTitle("Admin Panel");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 800);
-        // setPreferredSize(new Dimension(1000, 800));
         setLocationRelativeTo(null);
 
         mainPanel = new JPanel();
@@ -42,7 +43,11 @@ public class AdminView extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setContentPane(scrollPane);
 
-        JButton backButton = new JButton("Go back to login");
+        JLabel welcomeLabel = new JLabel("Bienvenido administrador:" + user.getUsername());
+
+        mainPanel.add(welcomeLabel);
+
+        JButton backButton = new JButton("Volver a login");
         backButton.addActionListener(e -> {
            dispose();
             loginView.setVisible(true);
@@ -53,11 +58,11 @@ public class AdminView extends JFrame {
 
         // USER CREATION
         JPanel createUserPanel = new JPanel();
-        createUserPanel.setBorder(BorderFactory.createTitledBorder("Create User"));
+        createUserPanel.setBorder(BorderFactory.createTitledBorder("Crear usuarios"));
 
         createCreateUserBox(createUserPanel);
 
-        JButton toggleCreateUserButton = new JButton("Create User");
+        JButton toggleCreateUserButton = new JButton("Crear nuevo usuario");
         toggleCreateUserButton.addActionListener(e -> {
             createUserPanel.setVisible(!createUserPanel.isVisible());
             mainPanel.revalidate();
@@ -68,11 +73,11 @@ public class AdminView extends JFrame {
 
         // ACCOUNT CREATION
         JPanel createAccountPanel = new JPanel();
-        createAccountPanel.setBorder(BorderFactory.createTitledBorder("Create Account"));
+        createAccountPanel.setBorder(BorderFactory.createTitledBorder("Crear cuentas"));
 
         createCreateAccountBox(createAccountPanel);
 
-        JButton toggleCreateAccountButton = new JButton("Create Account");
+        JButton toggleCreateAccountButton = new JButton("Crear nueva cuenta");
         toggleCreateAccountButton.addActionListener(e -> {
             createAccountPanel.setVisible(!createAccountPanel.isVisible());
             mainPanel.revalidate();
@@ -83,11 +88,11 @@ public class AdminView extends JFrame {
 
         // INTEREST CREATION
         JPanel createInterestPanel = new JPanel();
-        createInterestPanel.setBorder(BorderFactory.createTitledBorder("Create Interest"));
+        createInterestPanel.setBorder(BorderFactory.createTitledBorder("Crear intereses"));
 
         createCreateInterestBox(createInterestPanel);
 
-        JButton toggleCreateInterestButton = new JButton("Create Interest");
+        JButton toggleCreateInterestButton = new JButton("Agregar intreres");
         toggleCreateInterestButton.addActionListener(e -> {
             createInterestPanel.setVisible(!createInterestPanel.isVisible());
             mainPanel.revalidate();
@@ -98,11 +103,11 @@ public class AdminView extends JFrame {
 
         // CARD CREATION
         JPanel createCardPanel = new JPanel();
-        createCardPanel.setBorder(BorderFactory.createTitledBorder("Create Card"));
+        createCardPanel.setBorder(BorderFactory.createTitledBorder("Crear tarjetas"));
 
         createCreateCardBox(createCardPanel);
 
-        JButton toggleCreateCardButton = new JButton("Create Card");
+        JButton toggleCreateCardButton = new JButton("Agregar nueva tarjeta");
         toggleCreateCardButton.addActionListener(e -> {
             createCardPanel.setVisible(!createCardPanel.isVisible());
             mainPanel.revalidate();
@@ -113,11 +118,11 @@ public class AdminView extends JFrame {
 
         // Transaction CREATION
         JPanel createTransactionPanel = new JPanel();
-        createTransactionPanel.setBorder(BorderFactory.createTitledBorder("Create Transaction"));
+        createTransactionPanel.setBorder(BorderFactory.createTitledBorder("Crear transacciones"));
 
         createCreateTransactionBox(createTransactionPanel);
 
-        JButton toggleCreateTransactionButton = new JButton("Create Transaction");
+        JButton toggleCreateTransactionButton = new JButton("Generar nueva transaccion");
         toggleCreateTransactionButton.addActionListener(e -> {
             createTransactionPanel.setVisible(!createTransactionPanel.isVisible());
             mainPanel.revalidate();
@@ -128,11 +133,11 @@ public class AdminView extends JFrame {
 
         // USER DELETE
         JPanel createDeleteUserPanel = new JPanel();
-        createDeleteUserPanel.setBorder(BorderFactory.createTitledBorder("Delete User"));
+        createDeleteUserPanel.setBorder(BorderFactory.createTitledBorder("Eliminar usuarios"));
 
         createDeleteUserBox(createDeleteUserPanel);
 
-        JButton toggleDeleteUserButton = new JButton("Delete User");
+        JButton toggleDeleteUserButton = new JButton("Eliminar usuario");
         toggleDeleteUserButton.addActionListener(e -> {
             createDeleteUserPanel.setVisible(!createDeleteUserPanel.isVisible());
             mainPanel.revalidate();
@@ -143,11 +148,11 @@ public class AdminView extends JFrame {
 
         // ACCOUNT DELETE
         JPanel createDeleteAccountPanel = new JPanel();
-        createDeleteAccountPanel.setBorder(BorderFactory.createTitledBorder("Delete Account"));
+        createDeleteAccountPanel.setBorder(BorderFactory.createTitledBorder("Eliminar cuentas"));
 
         createDeleteAccountBox(createDeleteAccountPanel);
 
-        JButton toggleDeleteAccountButton = new JButton("Delete Account");
+        JButton toggleDeleteAccountButton = new JButton("Eliminar cuenta");
         toggleDeleteAccountButton.addActionListener(e -> {
             createDeleteAccountPanel.setVisible(!createDeleteAccountPanel.isVisible());
             mainPanel.revalidate();
@@ -158,11 +163,11 @@ public class AdminView extends JFrame {
 
         // CARD DELETE
         JPanel createDeleteCardPanel = new JPanel();
-        createDeleteCardPanel.setBorder(BorderFactory.createTitledBorder("Delete Card"));
+        createDeleteCardPanel.setBorder(BorderFactory.createTitledBorder("Eliminar tarjetas"));
 
         createDeleteCardBox(createDeleteUserPanel);
 
-        JButton toggleDeleteCardButton = new JButton("Delete Card");
+        JButton toggleDeleteCardButton = new JButton("Eliminar tarjeta");
         toggleDeleteCardButton.addActionListener(e -> {
             createDeleteCardPanel.setVisible(!createDeleteCardPanel.isVisible());
             mainPanel.revalidate();
@@ -177,7 +182,7 @@ public class AdminView extends JFrame {
     }
 
     private void createRefreshButton() {
-        JButton refreshButton = new JButton("Refresh");
+        JButton refreshButton = new JButton("Refrescar");
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -199,30 +204,19 @@ public class AdminView extends JFrame {
 
         createUserBox.setVisible(false);
 
-        createUserBox.setBorder(BorderFactory.createTitledBorder("Create User"));
+        createUserBox.setBorder(BorderFactory.createTitledBorder("Crear nuevo usuario"));
 
         createUserBox.setLayout(new GridLayout(0, 2));
 
-        JLabel nameLabel = new JLabel("Name:");
-        JLabel usernameLabel = new JLabel("Username:");
-        JLabel passwordLabel = new JLabel("Password:");
+        JLabel nameLabel = new JLabel("Nombre:");
+        JLabel usernameLabel = new JLabel("Usuario:");
+        JLabel passwordLabel = new JLabel("Contraseña:");
 
         JTextField nameField = new JTextField(15);
         JTextField usernameField = new JTextField(15);
         JPasswordField passwordField = new JPasswordField(15);
 
-        JButton createUserButton = new JButton("Create User");
-
-        /*
-        createUserButton.setEnabled(false);
-        if(
-                (!nameField.getText().equals("") && nameField != null) &&
-                (!usernameField.getText().equals("") && usernameField != null) &&
-                (!passwordField.getText().equals("") && passwordField != null)
-        ){
-            createUserButton.setEnabled(true);
-        }
-        */
+        JButton createUserButton = new JButton("Crear");
 
         createUserButton.addActionListener(new ActionListener() {
             @Override
@@ -244,7 +238,7 @@ public class AdminView extends JFrame {
                     }
                 }
                 catch (Exception ex) {
-                    throw new FailedObjectCreationException("Error creado usuario");
+                    throw new FailedObjectCreationException("Error creando usuario");
                 }
             }
         });
@@ -262,38 +256,27 @@ public class AdminView extends JFrame {
     private void createCreateAccountBox(JPanel createAccountBox) {
         createAccountBox.setVisible(false);
 
-        createAccountBox.setBorder(BorderFactory.createTitledBorder("Create Account"));
+        createAccountBox.setBorder(BorderFactory.createTitledBorder("Crear cuenta"));
 
         createAccountBox.setLayout(new GridLayout(0, 2));
 
-        JLabel userLabel = new JLabel("Select User id:");
+        JLabel userLabel = new JLabel("Seleccione ID de usuario:");
 
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
-        // List<Account> existingAcc = userAdminController.getAllUserAccounts((User) userDropdown.getSelectedItem());
-        // List<AccountType> existingAccountTypes = existingAcc.stream()
-                // .map(Account::getType)
-                // .collect(Collectors.toList());
-        // List<AccountType> allPossibleAccountTypes = Arrays.asList(AccountType.values());
-
-        // List<AccountType> availableAccountTypes = allPossibleAccountTypes.stream()
-               // .filter(accountType -> !existingAccountTypes.contains(accountType))
-               // .collect(Collectors.toList());
-
-        JLabel typeLabel = new JLabel("Account Type:");
+        JLabel typeLabel = new JLabel("Tipo de cuenta:");
         JComboBox<AccountType> typeDropdown = new JComboBox<>(AccountType.values());
-        // JComboBox<AccountType> typeDropdown = new JComboBox<>(availableAccountTypes.toArray(new AccountType[0]));
 
         JLabel cbuLabel = new JLabel("CBU:");
         JLabel aliasLabel = new JLabel("Alias:");
-        JLabel interestLabel = new JLabel("Interest:");
+        JLabel interestLabel = new JLabel("Interes:");
 
         JTextField cbuField = new JTextField(15);
         JTextField aliasField = new JTextField(15);
         JTextField interestField = new JTextField(15);
 
-        JButton createAccountButton = new JButton("Create Account");
+        JButton createAccountButton = new JButton("Crear");
 
         createAccountButton.addActionListener(new ActionListener() {
             @Override
@@ -355,26 +338,26 @@ public class AdminView extends JFrame {
     public void createCreateInterestBox(JPanel createInterestBox){
         createInterestBox.setVisible(false);
 
-        createInterestBox.setBorder(BorderFactory.createTitledBorder("Generate interest"));
+        createInterestBox.setBorder(BorderFactory.createTitledBorder("Generar intereses"));
 
         createInterestBox.setLayout(new GridLayout(0, 2));
 
-        JLabel userLabel = new JLabel("Select User id:");
+        JLabel userLabel = new JLabel("Seleccione ID de usuario:");
 
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
-        JLabel accountLabel = new JLabel("Select User account id:");
+        JLabel accountLabel = new JLabel("Seleccione ID de cuenta:");
 
         List<Account> accountList = userController.getAllUserAccounts((User) userDropdown.getSelectedItem());
         JComboBox<Account> accountDropdown = new JComboBox<>(accountList.toArray(new Account[0]));
 
-        JLabel interestLabel = new JLabel("Interest:");
+        JLabel interestLabel = new JLabel("Interes:");
         JTextField interestField = new JTextField(15);
 
         Account selectedAccount = (Account) accountDropdown.getSelectedItem();
 
-        JButton createInterestButton = new JButton("Modify interest");
+        JButton createInterestButton = new JButton("Modificar");
 
         createInterestButton.addActionListener(new ActionListener() {
             @Override
@@ -409,16 +392,16 @@ public class AdminView extends JFrame {
     public void createCreateCardBox(JPanel createCardBox){
         createCardBox.setVisible(false);
 
-        createCardBox.setBorder(BorderFactory.createTitledBorder("Create Card"));
+        createCardBox.setBorder(BorderFactory.createTitledBorder("Crear tarjetas"));
 
         createCardBox.setLayout(new GridLayout(0, 2));
 
-        JLabel userLabel = new JLabel("Select User id:");
+        JLabel userLabel = new JLabel("Seleccione ID de usuario:");
 
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
-        JLabel accountLabel = new JLabel("Select User account id:");
+        JLabel accountLabel = new JLabel("Seleccione ID de cuenta:");
 
         List<Account> accountList = userController.getAllUserAccounts((User) userDropdown.getSelectedItem());
         JComboBox<Account> accountDropdown = new JComboBox<>(accountList.toArray(new Account[0]));
@@ -437,7 +420,7 @@ public class AdminView extends JFrame {
         JTextField availableField = new JTextField(15);
         JTextField dueField = new JTextField(15);
 
-        JButton createCardButton = new JButton("Create Card");
+        JButton createCardButton = new JButton("Crear");
 
         createCardButton.addActionListener(new ActionListener() {
             @Override
@@ -482,16 +465,16 @@ public class AdminView extends JFrame {
     public void createDeleteUserBox(JPanel createDeleteUserBox){
         createDeleteUserBox.setVisible(false);
 
-        createDeleteUserBox.setBorder(BorderFactory.createTitledBorder("Delete User"));
+        createDeleteUserBox.setBorder(BorderFactory.createTitledBorder("Eliminar usuario existente"));
 
         createDeleteUserBox.setLayout(new GridLayout(0, 2));
 
-        JLabel userLabel = new JLabel("Select User id:");
+        JLabel userLabel = new JLabel("Seleccione ID de usuario:");
 
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
-        JButton deleteUserButton = new JButton("Delete user");
+        JButton deleteUserButton = new JButton("Eliminar");
 
         deleteUserButton.addActionListener(new ActionListener() {
             @Override
@@ -521,16 +504,16 @@ public class AdminView extends JFrame {
     public void createDeleteAccountBox(JPanel createDeleteAccountBox){
         createDeleteAccountBox.setVisible(false);
 
-        createDeleteAccountBox.setBorder(BorderFactory.createTitledBorder("Delete Account"));
+        createDeleteAccountBox.setBorder(BorderFactory.createTitledBorder("Eliminar cuenta"));
 
         createDeleteAccountBox.setLayout(new GridLayout(0, 2));
 
-        JLabel userLabel = new JLabel("Select User id:");
+        JLabel userLabel = new JLabel("Seleccione ID de usuario:");
 
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
-        JLabel accountLabel = new JLabel("Select User account id:");
+        JLabel accountLabel = new JLabel("Seleccione ID de cuenta:");
 
         List<Account> accountList = userController.getAllUserAccounts((User) userDropdown.getSelectedItem());
         JComboBox<Account> accountDropdown = new JComboBox<>(accountList.toArray(new Account[0]));
@@ -543,7 +526,7 @@ public class AdminView extends JFrame {
             }
         });
 
-        JButton deleteAccountButton = new JButton("Delete account");
+        JButton deleteAccountButton = new JButton("Eliminar");
 
         deleteAccountButton.addActionListener(new ActionListener() {
             @Override
@@ -572,16 +555,16 @@ public class AdminView extends JFrame {
     public void createDeleteCardBox(JPanel createDeleteCardBox){
         createDeleteCardBox.setVisible(false);
 
-        createDeleteCardBox.setBorder(BorderFactory.createTitledBorder("Delete Card"));
+        createDeleteCardBox.setBorder(BorderFactory.createTitledBorder("Eliminar tarjeta"));
 
         createDeleteCardBox.setLayout(new GridLayout(0, 2));
 
-        JLabel userLabel = new JLabel("Select User id:");
+        JLabel userLabel = new JLabel("Seleccione ID de usuario:");
 
         List<User> userList = userAdminController.getAllUsers();
         userDropdown = new JComboBox<>(userList.toArray(new User[0]));
 
-        JLabel cardLabel = new JLabel("Select User card id:");
+        JLabel cardLabel = new JLabel("Seleccione ID de tarjeta");
 
         List<Card> cardList = userController.getAllUserCards((User) userDropdown.getSelectedItem());
         JComboBox<Card> cardDropdown = new JComboBox<>(cardList.toArray(new Card[0]));
@@ -594,7 +577,7 @@ public class AdminView extends JFrame {
             }
         });
 
-        JButton deleteCardButton = new JButton("Delete card");
+        JButton deleteCardButton = new JButton("Eliminar");
 
         deleteCardButton.addActionListener(new ActionListener() {
             @Override
@@ -623,32 +606,32 @@ public class AdminView extends JFrame {
     public void createCreateTransactionBox(JPanel createTransactionBox){
         createTransactionBox.setVisible(false);
 
-        createTransactionBox.setBorder(BorderFactory.createTitledBorder("Create Transaction"));
+        createTransactionBox.setBorder(BorderFactory.createTitledBorder("Generar transaccion"));
 
         createTransactionBox.setLayout(new GridLayout(0, 2));
 
-        JLabel originLabel = new JLabel("Select Origin id:");
+        JLabel originLabel = new JLabel("Seleccione ID de cuenta origen:");
 
         List<Account> originList = userAdminController.getAllAccounts();
         JComboBox<Account> originDropdown = new JComboBox<>(originList.toArray(new Account[0]));
 
-        JLabel destinyLabel = new JLabel("Select destiny id:");
+        JLabel destinyLabel = new JLabel("Seleccione ID de cuenta destino:");
 
         List<Account> destinyList = userAdminController.getAllAccounts();
         JComboBox<Account> destinyDropdown = new JComboBox<>(destinyList.toArray(new Account[0]));
 
-        JLabel typeLabel = new JLabel("Transaction Type:");
+        JLabel typeLabel = new JLabel("Tipo de transaccion:");
         JComboBox<TransactionType> typeDropdown = new JComboBox<>(TransactionType.values());
 
-        JLabel descLabel = new JLabel("Description:");
+        JLabel descLabel = new JLabel("Descripcion:");
 
         JTextField descField = new JTextField(15);
 
-        JLabel amountLabel = new JLabel("Amount:");
+        JLabel amountLabel = new JLabel("Importe:");
 
         JTextField amountField = new JTextField(15);
 
-        JButton createTransactionButton = new JButton("Create Transaction");
+        JButton createTransactionButton = new JButton("Generar");
 
         createTransactionButton.addActionListener(new ActionListener() {
             @Override
@@ -678,7 +661,7 @@ public class AdminView extends JFrame {
                     Card dCard = userAdminController.getAccountCard(destiny);
 
                     if(oCard == null || dCard == null){
-                        JOptionPane.showMessageDialog(AdminView.this, "You need to create a card for the selected account before making a transaction.");
+                        JOptionPane.showMessageDialog(AdminView.this, "Para generar la trasaccion cada cuenta debe tener una tarjeta!");
                         return;
                     }
 
@@ -686,7 +669,7 @@ public class AdminView extends JFrame {
                     tr.setOriginId(origin.getId());
 
                     try {
-                        int id = userAdminController.generateTransaction(tr);
+                        int id = transactionController.generateTransaction(tr);
                         if (id > 0){
                             JOptionPane.showMessageDialog(AdminView.this, "Transaccion creada con ID:" + id);
                             refreshAll();

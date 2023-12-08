@@ -32,36 +32,8 @@ public class UserController {
         return accountDAO.searchByUser(user);
     }
 
-    public void editProfile(User user){
-        userDAO.update(user);
-    }
-
     public List<Transaction> getUserTransactions(User user, TransactionType type){
         return trDAO.searchByTypeAndUser(type, user.getId());
     }
 
-    public int generateTransaction(Transaction transaction){
-        // updates saldos
-        Card originAcc = cardDAO.searchByUserAccount(transaction.getOriginId());
-        Card destinyAcc = cardDAO.searchByUserAccount(transaction.getDestinyId());
-
-        if(transaction.getType() == TransactionType.debit){
-            originAcc.setAvailable(originAcc.getAvailable() - transaction.getAmount());
-            originAcc.setDue(originAcc.getDue() + transaction.getAmount());
-
-            destinyAcc.setAvailable(destinyAcc.getAvailable() + transaction.getAmount());
-        } else {
-            originAcc.setAvailable(originAcc.getAvailable() + transaction.getAmount());
-
-            destinyAcc.setAvailable(destinyAcc.getAvailable() - transaction.getAmount());
-            destinyAcc.setDue(destinyAcc.getDue() + transaction.getAmount());
-        }
-        cardDAO.update(originAcc);
-        cardDAO.update(destinyAcc);
-        return trDAO.create(transaction);
-    }
-
-    // public Report getSummary(){
-        //eggerar reportre?
-    // }
 }
