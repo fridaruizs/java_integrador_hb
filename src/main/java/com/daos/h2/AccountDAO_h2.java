@@ -11,11 +11,9 @@ import java.util.List;
 public class AccountDAO_h2 implements AccountDAO {
 
     private final Connection connection;
-
-    // Constructor to inject the database connection
     public AccountDAO_h2(Connection connection) {
         this.connection = connection;
-        initializeTable(); // Initialize the table if it doesn't exist
+        initializeTable();
     }
 
     private void initializeTable() {
@@ -27,6 +25,7 @@ public class AccountDAO_h2 implements AccountDAO {
                     "userId INTEGER NOT NULL," +
                     "alias VARCHAR(255) NOT NULL," +
                     "interest DOUBLE NOT NULL," +
+                    "total DOUBLE NOT NULL," +
                     "FOREIGN KEY (userId) REFERENCES users(id))");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,12 +84,13 @@ public class AccountDAO_h2 implements AccountDAO {
 
     @Override
     public int create(Account account) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO accounts (type, cbu, alias, interest, userId) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO accounts (type, cbu, alias, interest, total, userId) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, account.getTypeAsString());
             preparedStatement.setInt(2, account.getCbu());
             preparedStatement.setString(3, account.getAlias());
             preparedStatement.setDouble(4, account.getInterest());
-            preparedStatement.setInt(5, account.getUserId());
+            preparedStatement.setDouble(5, account.getTotal());
+            preparedStatement.setInt(6, account.getUserId());
             preparedStatement.executeUpdate();
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -106,13 +106,14 @@ public class AccountDAO_h2 implements AccountDAO {
 
     @Override
     public void update(Account account) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE accounts SET type = ?, cbu = ?, alias = ?, interest = ?, userId = ? WHERE id = ?")) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE accounts SET type = ?, cbu = ?, alias = ?, interest = ?, total = ?, userId = ? WHERE id = ?")) {
             preparedStatement.setString(1, account.getTypeAsString());
             preparedStatement.setInt(2, account.getCbu());
             preparedStatement.setString(3, account.getAlias());
             preparedStatement.setDouble(4, account.getInterest());
-            preparedStatement.setInt(4, account.getUserId());
-            preparedStatement.setInt(5, account.getId());
+            preparedStatement.setDouble(5, account.getTotal());
+            preparedStatement.setInt(6, account.getUserId());
+            preparedStatement.setInt(7, account.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,6 +137,7 @@ public class AccountDAO_h2 implements AccountDAO {
         account.setCbu(resultSet.getInt("cbu"));
         account.setAlias(resultSet.getString("alias"));
         account.setInterest(resultSet.getDouble("interest"));
+        account.setTotal(resultSet.getDouble("total"));
         account.setUserId(resultSet.getInt("userId"));
         return account;
     }

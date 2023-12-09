@@ -26,7 +26,7 @@ public class Main {
             // Controllers
             UserAdminController userAdminController = new UserAdminController(userDAO, accountDAO, cardDAO);
             UserController userController = new UserController(userDAO, cardDAO, accountDAO, transactionDAO);
-            TransactionController transactionController = new TransactionController(transactionDAO, cardDAO);
+            TransactionController transactionController = new TransactionController(transactionDAO, cardDAO, accountDAO);
             BaseController baseController = new BaseController(userDAO, userAdminDAO);
 
             // View

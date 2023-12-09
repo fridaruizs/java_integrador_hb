@@ -51,69 +51,6 @@ public class TransactionDAO_h2 implements TransactionDAO {
     }
 
     @Override
-    public List<Transaction> searchByDateAndAccount(Date from, Date to, int accountId) {
-        List<Transaction> transactions = new ArrayList<>();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE (originId = ? OR destinyId = ?) AND date BETWEEN ? AND ?")) {
-            preparedStatement.setInt(1, accountId);
-            preparedStatement.setInt(2, accountId);
-            preparedStatement.setTimestamp(3, new Timestamp(from.getTime()));
-            preparedStatement.setTimestamp(4, new Timestamp(to.getTime()));
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                transactions.add(mapResultSetToTransaction(resultSet));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
-    }
-
-    @Override
-    public List<Transaction> searchByDateAndUser(Date from, Date to, int userId) {
-        List<Transaction> transactions = new ArrayList<>();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
-                "SELECT * FROM transactions WHERE (originId IN (SELECT id FROM accounts WHERE userId = ?) " +
-                        "OR destinyId IN (SELECT id FROM accounts WHERE userId = ?)) AND date BETWEEN ? AND ?")) {
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, userId);
-            preparedStatement.setTimestamp(3, new Timestamp(from.getTime()));
-            preparedStatement.setTimestamp(4, new Timestamp(to.getTime()));
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                transactions.add(mapResultSetToTransaction(resultSet));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
-
-    }
-
-    @Override
-    public List<Transaction> searchByType(TransactionType type) {
-        List<Transaction> transactions = new ArrayList<>();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE type = ?")) {
-            preparedStatement.setString(1, type.name());
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                transactions.add(mapResultSetToTransaction(resultSet));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
-    }
-
-    @Override
     public List<Transaction> searchByTypeAndUser(TransactionType type, int userId) {
         List<Transaction> transactions = new ArrayList<>();
 
@@ -137,12 +74,12 @@ public class TransactionDAO_h2 implements TransactionDAO {
     }
 
     @Override
-    public List<Transaction> searchByUser(User user) {
+    public List<Transaction> searchByAccount(int accountId) {
         List<Transaction> transactions = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE originId = ? OR destinyId = ?")) {
-            preparedStatement.setLong(1, user.getId());
-            preparedStatement.setLong(2, user.getId());
+            preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(2, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -153,22 +90,6 @@ public class TransactionDAO_h2 implements TransactionDAO {
         }
 
         return transactions;
-    }
-
-    @Override
-    public Transaction searchById(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE id = ?")) {
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return mapResultSetToTransaction(resultSet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     @Override

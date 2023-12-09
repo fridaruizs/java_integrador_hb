@@ -14,7 +14,7 @@ public class UserDAO_h2 implements UserDAO {
     // Constructor to inject the database connection
     public UserDAO_h2(Connection connection) {
         this.connection = connection;
-        initializeTable(); // Initialize the table if it doesn't exist
+        initializeTable();
     }
 
     private void initializeTable() {
@@ -27,21 +27,6 @@ public class UserDAO_h2 implements UserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    @Override
-    public User searchById(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?")) {
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return mapResultSetToUser(resultSet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     @Override
@@ -95,19 +80,6 @@ public class UserDAO_h2 implements UserDAO {
             e.printStackTrace();
         }
         return -1;
-    }
-
-    @Override
-    public void update(User user) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET name = ?, username = ?, password = ? WHERE id = ?")) {
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getUsername());
-            preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setInt(4, user.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

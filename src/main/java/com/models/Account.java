@@ -95,6 +95,10 @@ public class Account {
             this.total = (available - due);
         }
     }
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
 
     // Helper
     public static AccountType fromString(String value) {

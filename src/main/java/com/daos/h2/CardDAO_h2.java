@@ -11,10 +11,9 @@ import java.util.List;
 public class CardDAO_h2 implements CardDAO {
     private final Connection connection;
 
-    // Constructor to inject the database connection
     public CardDAO_h2(Connection connection) {
         this.connection = connection;
-        initializeTable(); // Initialize the table if it doesn't exist
+        initializeTable();
     }
 
     private void initializeTable() {
