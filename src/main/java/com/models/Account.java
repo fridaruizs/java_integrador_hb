@@ -1,5 +1,7 @@
 package main.java.com.models;
 
+import java.text.DecimalFormat;
+
 public class Account {
     private int id;
     private AccountType type;
@@ -7,6 +9,7 @@ public class Account {
     private String alias;
     private double interest;
     private int userId;
+    private double total;
 
     //note: tarjeta no tiene user como atributo porque: asociasion unidireccional
     // es un camino simple de usuario tiene cuenta, cuenta tiene tarjeta
@@ -15,13 +18,14 @@ public class Account {
     // cuenta no tiene saldo porque es de la tarjeta
 
     public  Account(){};
-    public Account(int id, AccountType type, int cbu, String alias, double interest, int userId) {
+    public Account(int id, AccountType type, int cbu, String alias, double interest, int userId, double total) {
         this.id = id;
         this.type = type;
         this.cbu = cbu;
         this.alias = alias;
         this.interest = interest;
         this.userId = userId;
+        this.total = total;
     }
 
     @Override
@@ -53,6 +57,10 @@ public class Account {
     }
     public int getUserId(){return userId;};
 
+    public double getTotal(){
+        return total;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -78,6 +86,14 @@ public class Account {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public void setTotal(int available, int due) {
+        if(interest != 0){
+            this.total = (available - due) * interest;
+        } else {
+            this.total = (available - due);
+        }
     }
 
     // Helper

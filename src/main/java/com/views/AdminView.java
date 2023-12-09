@@ -31,7 +31,7 @@ public class AdminView extends JFrame {
         this.transactionController = transactionController;
         this.user = user;
 
-        setTitle("Admin Panel");
+        setTitle("Panel de administrador");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 800);
         setLocationRelativeTo(null);
@@ -47,7 +47,7 @@ public class AdminView extends JFrame {
 
         mainPanel.add(welcomeLabel);
 
-        JButton backButton = new JButton("Volver a login");
+        JButton backButton = new JButton("Volver al login");
         backButton.addActionListener(e -> {
            dispose();
             loginView.setVisible(true);
@@ -283,7 +283,7 @@ public class AdminView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int cbu = Integer.parseInt(cbuField.getText());
                 String alias = aliasField.getText();
-                int interest = Integer.parseInt(interestField.getText());
+                double interest = Double.parseDouble(interestField.getText());
 
                 User selectedUser = (User) userDropdown.getSelectedItem();
                 AccountType selectedType = (AccountType) typeDropdown.getSelectedItem();
@@ -293,6 +293,8 @@ public class AdminView extends JFrame {
                 newAcc.setInterest(interest);
                 newAcc.setAlias(alias);
                 newAcc.setType(selectedType);
+
+                newAcc.setTotal(0,0);
 
 
                 // VALIDATION
@@ -436,10 +438,17 @@ public class AdminView extends JFrame {
                 newCard.setAvailable(available);
                 newCard.setDue(due);
 
+                Card existing =  userAdminController.getAccountCard(selectedAcc);
+                if (existing != null){
+                    JOptionPane.showMessageDialog(AdminView.this, "Esta cuenta ya tiene una tarjeta, seleccione otra cuenta o elimine la tarjeta");
+                    return;
+                }
+
                 try {
                     int id = userAdminController.generateCard(newCard);
                     if (id > 0){
                         JOptionPane.showMessageDialog(AdminView.this, "Tarjeta creada con ID:" + id);
+                        selectedAcc.setTotal(available, due); // TODO UPDATE ACCOUNT IN DB
                         refreshAll();
                     }
                 }
@@ -585,6 +594,7 @@ public class AdminView extends JFrame {
                 try {
                     userAdminController.deleteCard((Card) cardDropdown.getSelectedItem());
                     JOptionPane.showMessageDialog(AdminView.this, "Tarjeta eliminada con exito");
+                    // TODO UPDATE ACCOUNT IN DB
                     refreshAll();
                 }
                 catch (Exception ex){
@@ -661,7 +671,7 @@ public class AdminView extends JFrame {
                     Card dCard = userAdminController.getAccountCard(destiny);
 
                     if(oCard == null || dCard == null){
-                        JOptionPane.showMessageDialog(AdminView.this, "Para generar la trasaccion cada cuenta debe tener una tarjeta!");
+                        JOptionPane.showMessageDialog(AdminView.this, "Para generar la trasanccion cada cuenta debe tener una tarjeta!");
                         return;
                     }
 

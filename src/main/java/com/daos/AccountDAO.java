@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface AccountDAO {
     List<Account> searchByUser(User user); //getall
+    Account searchById(int id);
     List<Account> searchAll();
     int create(Account account);
     void update(Account account);

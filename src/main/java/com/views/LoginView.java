@@ -65,7 +65,7 @@ public class LoginView extends JFrame {
                         adminPanel.setVisible(true);
                         LoginView.this.setVisible(false);
                     } else if (existingUser != null && type.equals("user")) {
-                        UserView userPanel = new UserView((User)existingUser, userAdminController, userController, trController, LoginView.this);
+                        UserView userPanel = new UserView((User)existingUser, userController, trController, LoginView.this);
                         userPanel.setVisible(true);
                         LoginView.this.setVisible(false);
                     } else {
