@@ -4,23 +4,23 @@ import java.util.Date;
 import java.util.List;
 
 public class Report {
-    private int Id;
+    private int id;
     private Date from;
     private Date to;
     private List<Transaction> transactions;
     public Report(int id, Date from, Date to, List<Transaction> transactions) {
-        Id = id;
+        this.id = id;
         this.from = from;
         this.to = to;
         this.transactions = transactions;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public Date getFrom() {

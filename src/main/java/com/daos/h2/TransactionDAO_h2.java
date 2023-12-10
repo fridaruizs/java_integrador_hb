@@ -32,25 +32,6 @@ public class TransactionDAO_h2 implements TransactionDAO {
     }
 
     @Override
-    public List<Transaction> searchByDate(Date from, Date to) {
-        List<Transaction> transactions = new ArrayList<>();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE date BETWEEN ? AND ?")) {
-            preparedStatement.setTimestamp(1, new Timestamp(from.getTime()));
-            preparedStatement.setTimestamp(2, new Timestamp(to.getTime()));
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                transactions.add(mapResultSetToTransaction(resultSet));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return transactions;
-    }
-
-    @Override
     public List<Transaction> searchByTypeAndUser(TransactionType type, int userId) {
         List<Transaction> transactions = new ArrayList<>();
 
@@ -80,6 +61,27 @@ public class TransactionDAO_h2 implements TransactionDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE originId = ? OR destinyId = ?")) {
             preparedStatement.setLong(1, accountId);
             preparedStatement.setLong(2, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                transactions.add(mapResultSetToTransaction(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return transactions;
+    }
+
+    @Override
+    public List<Transaction> searchByAccountandDate(int accountId, Date from, Date to) {
+        List<Transaction> transactions = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM transactions WHERE (originId = ? OR destinyId = ?) AND (date BETWEEN ? AND ?) ")) {
+            preparedStatement.setLong(1, accountId);
+            preparedStatement.setLong(2, accountId);
+            preparedStatement.setTimestamp(3, new Timestamp(from.getTime()));
+            preparedStatement.setTimestamp(4, new Timestamp(to.getTime()));
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {

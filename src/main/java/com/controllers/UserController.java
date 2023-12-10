@@ -27,7 +27,6 @@ public class UserController {
     public Card getAccountCard(Account account){
         return cardDAO.searchByUserAccount(account.getId());
     }
-
     public List<Account> getAllUserAccounts(User user){
         return accountDAO.searchByUser(user);
     }

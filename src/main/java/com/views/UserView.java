@@ -12,6 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -22,9 +25,7 @@ public class UserView extends JFrame {
     private UserController userController;
     private TransactionController trController;
     private User user;
-    private JComboBox<User> userDropdown;
     private JPanel mainPanel;
-
     private JTable debitTable;
     private JTable creditTable;
 
@@ -33,6 +34,7 @@ public class UserView extends JFrame {
 
     public UserView(User user, UserController userController, TransactionController trController, LoginView loginView) {
         this.userController = userController;
+        this.trController = trController;
         this.user = user;
 
         setTitle("Panel de usuario");
@@ -77,6 +79,10 @@ public class UserView extends JFrame {
 
         mainPanel.add(toggleCreateTrButton);
         mainPanel.add(createTransactionPanel);
+
+        JButton  exportCSVButton = new JButton("Descargar resumen de cuenta");
+        exportCSVButton.addActionListener(e -> exportReport());
+        mainPanel.add(exportCSVButton);
 
         setContentPane(mainPanel);
     }
@@ -306,7 +312,6 @@ public class UserView extends JFrame {
             JLabel emptyLabel = new JLabel("El usuario no movimientos");
             createTransactionBox.add(emptyLabel);
         } else {
-            // Create Debit Table
             DefaultTableModel debitModel = new DefaultTableModel();
             debitModel.addColumn("ID");
             debitModel.addColumn("ID de cuenta origen");
@@ -334,7 +339,6 @@ public class UserView extends JFrame {
 
             createTransactionBox.add(debitScrollPane);
 
-            // Create Credit Table
             DefaultTableModel creditModel = new DefaultTableModel();
             creditModel.addColumn("ID");
             creditModel.addColumn("ID de cuenta origen");
@@ -365,6 +369,72 @@ public class UserView extends JFrame {
 
         mainPanel.add(createTransactionBox);
 
+    }
+    public void exportReport(){
+        String defaultFilePath = System.getProperty("user.home") + File.separator + "Downloads" + File.separator + "resumen_cuentas.csv";
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new File(defaultFilePath));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+
+            try (FileWriter writer = new FileWriter(fileToSave)) {
+                writeUserAccountInfo(writer);
+                writer.write("\n");
+
+                // Write transaction data
+                writeTransactionData(writer, debitTable);
+                writeTransactionData(writer, creditTable);
+
+                JOptionPane.showMessageDialog(this, "Resumen desgarcado correctamente en ." + defaultFilePath, "Exportar a archivo CSV", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error generando resumen.", "Exportar a archivo CSV", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void writeUserAccountInfo(FileWriter writer) throws IOException {
+        List<Account> userAccounts = userController.getAllUserAccounts(user);
+
+        writer.write("Informacion de cuentas\n");
+        writer.write("ID, Type, CBU, Alias, Interest, Total\n");
+
+        for (Account account : userAccounts) {
+            writer.write(account.getId() + "," +
+                    account.getTypeAsString() + "," +
+                    account.getCbu() + "," +
+                    account.getAlias() + "," +
+                    account.getInterest() + "," +
+                    account.getTotal() + "\n");
+        }
+    }
+
+    private void writeTransactionData(FileWriter writer, JTable tableToExport) throws IOException {
+        if (tableToExport.getRowCount() == 0) {
+            return;
+        }
+
+        for (int col = 0; col < tableToExport.getColumnCount(); col++) {
+            writer.write(tableToExport.getColumnName(col));
+            if (col < tableToExport.getColumnCount() - 1) {
+                writer.write(",");
+            }
+        }
+        writer.write("\n");
+
+        for (int row = 0; row < tableToExport.getRowCount(); row++) {
+            for (int col = 0; col < tableToExport.getColumnCount(); col++) {
+                writer.write(String.valueOf(tableToExport.getValueAt(row, col)));
+                if (col < tableToExport.getColumnCount() - 1) {
+                    writer.write(",");
+                }
+            }
+            writer.write("\n");
+        }
     }
 
 }

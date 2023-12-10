@@ -25,7 +25,7 @@ public class AdminView extends JFrame {
     private JComboBox<User> userDropdown;
     private JPanel mainPanel;
 
-    public AdminView(UserAdmin user, UserAdminController userAdminController, UserController userController, TransactionController transactionController,LoginView loginView) {
+    public AdminView(UserAdmin user, UserAdminController userAdminController, UserController userController, TransactionController transactionController, LoginView loginView) {
         this.userAdminController = userAdminController;
         this.userController = userController;
         this.transactionController = transactionController;
@@ -58,7 +58,7 @@ public class AdminView extends JFrame {
 
         // USER CREATION
         JPanel createUserPanel = new JPanel();
-        createUserPanel.setBorder(BorderFactory.createTitledBorder("Crear usuarios"));
+        // createUserPanel.setBorder(BorderFactory.createTitledBorder("Crear usuarios"));
 
         createCreateUserBox(createUserPanel);
 
@@ -73,7 +73,7 @@ public class AdminView extends JFrame {
 
         // ACCOUNT CREATION
         JPanel createAccountPanel = new JPanel();
-        createAccountPanel.setBorder(BorderFactory.createTitledBorder("Crear cuentas"));
+        // createAccountPanel.setBorder(BorderFactory.createTitledBorder("Crear cuentas"));
 
         createCreateAccountBox(createAccountPanel);
 
@@ -88,7 +88,7 @@ public class AdminView extends JFrame {
 
         // INTEREST CREATION
         JPanel createInterestPanel = new JPanel();
-        createInterestPanel.setBorder(BorderFactory.createTitledBorder("Crear intereses"));
+        // createInterestPanel.setBorder(BorderFactory.createTitledBorder("Crear intereses"));
 
         createCreateInterestBox(createInterestPanel);
 
@@ -103,7 +103,7 @@ public class AdminView extends JFrame {
 
         // CARD CREATION
         JPanel createCardPanel = new JPanel();
-        createCardPanel.setBorder(BorderFactory.createTitledBorder("Crear tarjetas"));
+        // createCardPanel.setBorder(BorderFactory.createTitledBorder("Crear tarjetas"));
 
         createCreateCardBox(createCardPanel);
 
@@ -118,7 +118,7 @@ public class AdminView extends JFrame {
 
         // Transaction CREATION
         JPanel createTransactionPanel = new JPanel();
-        createTransactionPanel.setBorder(BorderFactory.createTitledBorder("Crear transacciones"));
+        // createTransactionPanel.setBorder(BorderFactory.createTitledBorder("Crear transacciones"));
 
         createCreateTransactionBox(createTransactionPanel);
 
@@ -133,7 +133,7 @@ public class AdminView extends JFrame {
 
         // USER DELETE
         JPanel createDeleteUserPanel = new JPanel();
-        createDeleteUserPanel.setBorder(BorderFactory.createTitledBorder("Eliminar usuarios"));
+        // createDeleteUserPanel.setBorder(BorderFactory.createTitledBorder("Eliminar usuarios"));
 
         createDeleteUserBox(createDeleteUserPanel);
 
@@ -148,7 +148,7 @@ public class AdminView extends JFrame {
 
         // ACCOUNT DELETE
         JPanel createDeleteAccountPanel = new JPanel();
-        createDeleteAccountPanel.setBorder(BorderFactory.createTitledBorder("Eliminar cuentas"));
+        // createDeleteAccountPanel.setBorder(BorderFactory.createTitledBorder("Eliminar cuentas"));
 
         createDeleteAccountBox(createDeleteAccountPanel);
 
@@ -163,7 +163,7 @@ public class AdminView extends JFrame {
 
         // CARD DELETE
         JPanel createDeleteCardPanel = new JPanel();
-        createDeleteCardPanel.setBorder(BorderFactory.createTitledBorder("Eliminar tarjetas"));
+        // createDeleteCardPanel.setBorder(BorderFactory.createTitledBorder("Eliminar tarjetas"));
 
         createDeleteCardBox(createDeleteUserPanel);
 
@@ -175,6 +175,15 @@ public class AdminView extends JFrame {
 
         mainPanel.add(toggleDeleteCardButton);
         mainPanel.add(createDeleteCardPanel);
+
+        JButton reportButton = new JButton("Ir a reportes");
+        reportButton.addActionListener(e -> {
+            ReportView reportView = new ReportView(transactionController, userAdminController, userController, AdminView.this);
+            reportView.setVisible(true);
+            this.mainPanel.setVisible(false);
+        });
+
+        mainPanel.add(reportButton);
 
         createRefreshButton();
 
@@ -708,5 +717,4 @@ public class AdminView extends JFrame {
 
         mainPanel.add(createTransactionBox);
     }
-    public void createCreateRecordBox(JPanel panel){}
 }

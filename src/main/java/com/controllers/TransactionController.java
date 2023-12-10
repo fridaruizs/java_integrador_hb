@@ -3,10 +3,12 @@ package main.java.com.controllers;
 import main.java.com.daos.AccountDAO;
 import main.java.com.daos.CardDAO;
 import main.java.com.daos.TransactionDAO;
-import main.java.com.models.Account;
-import main.java.com.models.Card;
-import main.java.com.models.Transaction;
-import main.java.com.models.TransactionType;
+import main.java.com.models.*;
+
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class TransactionController {
     private final TransactionDAO transactionDAO;
@@ -58,5 +60,34 @@ public class TransactionController {
         accountDAO.update(destinyAcc);
 
         return transactionDAO.create(transaction);
+    }
+
+    public List<Transaction> getAccountAudit(Account account){
+        return transactionDAO.searchByAccount(account.getId());
+    }
+
+    public Report getCardTransactionsByMonth(Card card, int month){
+        // GET DATE
+        Date startDate = getFirstDayOfMonth(2023, month);
+        Date endDate = getLastDayOfMonth(2023, month);
+
+        List<Transaction> movements = transactionDAO.searchByAccountandDate(card.getAccountId(), startDate, endDate);
+
+        // ID hardcodeado porque no se guarda en la db ups :)
+        return new Report(1, startDate, endDate, movements);
+    }
+
+    public static Date getFirstDayOfMonth(int year, int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, 1);
+        return calendar.getTime();
+    }
+
+    public static Date getLastDayOfMonth(int year, int month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, 1);
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return calendar.getTime();
     }
 }
