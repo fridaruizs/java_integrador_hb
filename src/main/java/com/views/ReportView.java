@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReportView extends JFrame {
@@ -190,12 +191,13 @@ public class ReportView extends JFrame {
         JLabel welcomeLabel = new JLabel("Nombre de usuario:" + user.getName());
         box.add(welcomeLabel);
 
-        List<Transaction> allTransactionsEver = null;
+        List<Transaction> allTransactionsEver = new ArrayList();
 
         for (Account acc: user.getAccounts()
              ) {
             allTransactionsEver.addAll(trController.getAccountAudit(acc));
         }
+
         Report report = new Report(1, null, null, allTransactionsEver);
 
         if (report.getTransactions().isEmpty()) {

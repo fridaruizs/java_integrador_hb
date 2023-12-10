@@ -61,5 +61,15 @@ public class UserAdminController {
     public int generateCard(Card card){
         return cardDAO.create(card);
     }
-    public void deleteCard(Card card){ cardDAO.remove(card.getId());}
+    public int generateCard(Card card, Account acc){
+        accountDAO.update(acc);
+        return cardDAO.create(card);
+    }
+    public void deleteCard(Card card){
+        // cuando se elimina una tarjeta todos los saldos se resetean ! (concepto utopico de fridabank)
+        Account updated = accountDAO.searchById(card.getAccountId());
+        updated.setTotal(0);
+        accountDAO.update(updated);
+        cardDAO.remove(card.getId());
+    }
 }

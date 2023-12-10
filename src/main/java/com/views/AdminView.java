@@ -307,7 +307,6 @@ public class AdminView extends JFrame {
 
 
                 // VALIDATION
-                // if account.type ya existe no deberia ni ser una op TODO dropdown
                 List<Account> existingAcc = userAdminController.getAllUserAccounts((User) userDropdown.getSelectedItem());
                 List<AccountType> existingAccountTypes = existingAcc.stream()
                 .map(Account::getType)
@@ -454,10 +453,10 @@ public class AdminView extends JFrame {
                 }
 
                 try {
-                    int id = userAdminController.generateCard(newCard);
+                    selectedAcc.setTotal(available, due);
+                    int id = userAdminController.generateCard(newCard, selectedAcc);
                     if (id > 0){
                         JOptionPane.showMessageDialog(AdminView.this, "Tarjeta creada con ID:" + id);
-                        selectedAcc.setTotal(available, due); // TODO UPDATE ACCOUNT IN DB
                         refreshAll();
                     }
                 }
@@ -603,7 +602,6 @@ public class AdminView extends JFrame {
                 try {
                     userAdminController.deleteCard((Card) cardDropdown.getSelectedItem());
                     JOptionPane.showMessageDialog(AdminView.this, "Tarjeta eliminada con exito");
-                    // TODO UPDATE ACCOUNT IN DB
                     refreshAll();
                 }
                 catch (Exception ex){
