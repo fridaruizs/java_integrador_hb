@@ -1,14 +1,16 @@
 package main.java.com.models;
 
+import java.util.List;
+
 public class User {
     private int id;
     private String name;
-    private Account[] accounts;
+    private List<Account> accounts;
     private String username;
     private String password;
 
-    public User(){};
-    public User(int id, String name, String username, String password, Account[] accounts) {
+    public User(){}
+    public User(int id, String name, String username, String password, List<Account> accounts) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -40,7 +42,7 @@ public class User {
         return password;
     }
 
-    public Account[] getAccounts() {
+    public List<Account> getAccounts() {
         return accounts;
     }
 

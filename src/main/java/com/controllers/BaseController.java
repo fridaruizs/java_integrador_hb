@@ -31,9 +31,9 @@ public class BaseController {
     public Object login(String username, String password) {
         UserAdmin ua = userAdminDAO.searchByName(username);
         User u = userDAO.searchByName(username);
-        if(u != null){
+        if(u != null && Objects.equals(u.getPassword(), password)){
             return u;
-        } else if (ua != null) {
+        } else if (ua != null && Objects.equals(ua.getPassword(), password)) {
             return ua;
         }
         return null;

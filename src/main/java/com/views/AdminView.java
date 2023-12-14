@@ -36,6 +36,9 @@ public class AdminView extends JFrame {
         setSize(1000, 800);
         setLocationRelativeTo(null);
 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
+
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 

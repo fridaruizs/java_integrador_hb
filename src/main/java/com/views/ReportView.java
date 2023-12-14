@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 public class ReportView extends JFrame {
     private JPanel mainPanel;
@@ -191,14 +192,24 @@ public class ReportView extends JFrame {
         JLabel welcomeLabel = new JLabel("Nombre de usuario:" + user.getName());
         box.add(welcomeLabel);
 
-        List<Transaction> allTransactionsEver = new ArrayList();
+        List<Transaction> allTransactionsEver = new ArrayList<>();
 
-        for (Account acc: user.getAccounts()
+        List<Account> allAccs = userController.getAllUserAccounts(user);
+
+        if(allAccs.isEmpty()){
+            JLabel emptyLabel = new JLabel("No hay informacion de cuentas disponible");
+            box.add(emptyLabel);
+            return;
+        }
+
+        for (Account acc: allAccs
              ) {
             allTransactionsEver.addAll(trController.getAccountAudit(acc));
         }
 
-        Report report = new Report(1, null, null, allTransactionsEver);
+        Date today = new Date();
+
+        Report report = new Report(1, today, today, allTransactionsEver);
 
         if (report.getTransactions().isEmpty()) {
             JLabel emptyLabel = new JLabel("No hay informacion de reporte disponible");
@@ -215,8 +226,8 @@ public class ReportView extends JFrame {
 
             reportModel.addRow(new Object[]{
                     report.getId(),
-                    report.getFrom(),
-                    report.getTo(),
+                    report.getFrom().toString(),
+                    report.getTo().toString(),
                     "",
                     "",
                     "",
@@ -228,7 +239,7 @@ public class ReportView extends JFrame {
                         "",
                         "",
                         transaction.getId(),
-                        transaction.getType(),
+                        transaction.getTypeAsString(),
                         transaction.getAmount(),
                         transaction.getDescription()
                 });
@@ -258,12 +269,12 @@ public class ReportView extends JFrame {
 
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write("ID de reporte, Desde, Hasta, ID de transaccion, Tipo de transaccion, Cantidad, Descripcion\n");
-            writer.write(String.format("%d,%s,%s,,,,\n", report.getId(), report.getFrom(), report.getTo()));
+            writer.write(String.format("%d,%s,%s,,,,\n", report.getId(), report.getFrom().toString(), report.getTo().toString()));
 
             for (Transaction transaction : report.getTransactions()) {
-                writer.write(String.format(",,%d,%s,%s,%s,%s\n",
+                writer.write(String.format(",,%d,%s,%d,%s\n",
                         transaction.getId(),
-                        transaction.getType(),
+                        transaction.getTypeAsString(),
                         transaction.getAmount(),
                         transaction.getDescription()));
             }
